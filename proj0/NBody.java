@@ -23,8 +23,8 @@ public class NBody{
 		return resBodys;
 	}
 
-	public static Body[] readPlanets(String fileName) {
-		return readBodies(fileName);
+	public static Planet[] readPlanets(String fileName) {
+		return (Planet[])readBodies(fileName);
 	}
 
 
