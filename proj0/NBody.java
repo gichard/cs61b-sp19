@@ -23,6 +23,10 @@ public class NBody{
 		return resBodys;
 	}
 
+	public static Body[] readPlanets(String fileName) {
+		return readBodies(fileName);
+	}
+
 
 	public static void main(String[] args) {
 		if (args.length < 3)
