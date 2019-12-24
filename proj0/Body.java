@@ -85,7 +85,7 @@ public class Body {
 
 	public void draw() {
 		// StdDraw.enableDoubleBuffering();
-		StdDraw.picture(xxPos, yyPos, imgFileName);
+		StdDraw.picture(xxPos, yyPos, "./images/" + imgFileName);
 		StdDraw.show();
 	}
 }
