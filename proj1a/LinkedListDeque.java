@@ -122,7 +122,7 @@ public class LinkedListDeque<T> {
                     ptr = ptr.next;
                 }
             } else {
-                for (int i = 0; i <= index; i++) {
+                for (int i = 0; i < size - index; i++) {
                     ptr = ptr.prev;
                 }
             }
