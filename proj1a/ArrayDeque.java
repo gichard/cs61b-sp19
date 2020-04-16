@@ -89,6 +89,9 @@ public class ArrayDeque<T> {
     /** removes and returns the item at the front of the deque.
      * if no such item exists, returns null*/
     public T removeFirst() {
+        if (size == 0) {
+            return null;
+        }
         T firstItem = this.get(0);
         size -= 1;
         nextFirst += 1;
@@ -104,6 +107,9 @@ public class ArrayDeque<T> {
     /** removes and returns the item at the back of the deque.
      * If no such item exists, returns null*/
     public T removeLast() {
+        if (size == 0) {
+            return null;
+        }
         T lastItem = this.get(size - 1);
         size -= 1;
         nextLast -= 1;
