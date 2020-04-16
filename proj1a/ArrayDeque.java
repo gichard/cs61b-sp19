@@ -46,6 +46,7 @@ public class ArrayDeque<T> {
         if (nextFirst < 0) {
             nextFirst += items.length;
         }
+        size += 1;
     }
 
     /** adds an item to the last of the deque */
@@ -58,6 +59,7 @@ public class ArrayDeque<T> {
         if (nextLast >= items.length) {
             nextLast -= items.length;
         }
+        size += 1;
     }
 
     /** returns true if the deque is empty, false otherwise */
@@ -118,6 +120,9 @@ public class ArrayDeque<T> {
      * the next item, and so forth. If no such item exists, returns
      * null. Must Not alter the deque! */
     public T get(int index) {
+        if (index < 0 || index >= size) {
+            return null;
+        }
         int realIndex = (nextFirst + 1 + index) % items.length;
         return items[realIndex];
     }
