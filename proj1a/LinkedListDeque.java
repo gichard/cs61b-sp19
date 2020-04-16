@@ -25,7 +25,6 @@ public class LinkedListDeque<T> {
 
     }
 
-    /** 18summer requires no copy constructor*/
 /*    public LinkedListDeque(LinkedListDeque other) {
         size = 0;
         sentinel = new ItemNode();

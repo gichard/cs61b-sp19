@@ -11,7 +11,6 @@ public class ArrayDeque<T> {
         nextLast = 1;
     }
 
-    /** 18summer requires no copy constructor*/
 /*    public ArrayDeque(ArrayDeque other) {
         size = other.size();
         items = (T[]) new Object[size];
