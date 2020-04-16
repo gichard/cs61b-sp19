@@ -1,5 +1,5 @@
 public class LinkedListDeque<T> {
-    public class ItemNode {
+    private class ItemNode {
         private T first;
         private ItemNode next;
         private ItemNode prev;
@@ -25,13 +25,13 @@ public class LinkedListDeque<T> {
 
     }
 
-    public LinkedListDeque(LinkedListDeque other) {
+/*    public LinkedListDeque(LinkedListDeque other) {
         size = 0;
         sentinel = new ItemNode();
         while (!other.isEmpty()) {
             this.addLast((T) other.removeFirst());
         }
-    }
+    }*/
 
     /** adds an item to the front of the deque */
     public void addFirst(T item) {
