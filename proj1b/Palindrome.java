@@ -8,29 +8,30 @@ public class Palindrome {
         return result;
     }
 
-    private boolean isPalindromeHlpr(Deque<Character> cList1, Deque<Character> cList2) {
-        if (cList1.size() == 0) {
+    private boolean isPalindromeHlpr(Deque<Character> cList) {
+        if (cList.size() == 0 || cList.size() == 1) {
             return true;
         } else {
-            return (cList1.removeFirst() == cList2.removeLast()) && isPalindromeHlpr(cList1, cList2);
+            return (cList.removeFirst() == cList.removeLast()) && isPalindromeHlpr(cList);
         }
     }
     /** Any word of length 1 or 0 is a palindrome;
      * ‘A’ and ‘a’ should NOT be considered equal */
     public boolean isPalindrome(String word) {
-/*        if (word.length() == 0) {
+        Deque<Character> cList = wordToDeque(word);
+        return isPalindromeHlpr(cList);
+    }
+
+    private boolean isPalindromeHlpr(Deque<Character> cList, CharacterComparator cc) {
+        if (cList.size() == 0 || cList.size() == 1) {
             return true;
+        } else {
+            return cc.equalChars(cList.removeFirst(), cList.removeLast()) && isPalindromeHlpr(cList, cc);
         }
-        Deque<Character> cList1 = wordToDeque(word);
-        Deque<Character> cList2 = wordToDeque(word);
-        while (cList1.size() > 0) {
-            if (cList1.removeFirst() != cList2.removeLast()) {
-                return false;
-            }
-        }
-        return true;*/
-        Deque<Character> cList1 = wordToDeque(word);
-        Deque<Character> cList2 = wordToDeque(word);
-        return isPalindromeHlpr(cList1, cList2);
+    }
+
+    public boolean isPalindrome(String word, CharacterComparator cc) {
+        Deque<Character> cList = wordToDeque(word);
+        return isPalindromeHlpr(cList, cc);
     }
 }
