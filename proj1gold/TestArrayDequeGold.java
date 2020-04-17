@@ -30,44 +30,35 @@ public class TestArrayDequeGold {
             ArrayDequeSolution<Integer> exp = new ArrayDequeSolution<>();
 
             // build up array deque
+            String message = "";
             for (int j = 0; j < actionSeq.length; j++) {
                 switch (actionSeq[j]) {
                     case 0:
                         sad.addFirst(j);
                         exp.addFirst(j);
+                        message += "addFirst(" + j + ")\n";
                         break;
                     case 1:
                         sad.addLast(j);
                         exp.addLast(j);
+                        message += "addLast(" + j +")\n";
                         break;
                     case 2:
                         sad.removeFirst();
                         exp.removeFirst();
+                        message += "removeFirst()\n";
                         break;
                     case 3:
                         sad.removeLast();
                         exp.removeLast();
+                        message += "removeLast()\n";
                         break;
                 }
-            }
-
-            String message = "";
-            assertEquals("size mismatch: expected " + exp.size() + ", but got " + sad.size()
-                    , exp.size(), sad.size());
-            for (int j = 0; j < exp.size(); j++) {
-                switch (actionSeq[j]) {
-                    case 0:
-                        message += "addFirst(" + exp.get(j) + ")\n";
-                    case 1:
-                        message += "addLast(" + exp.get(j) +")\n";
-                    case 2:
-                        message += "removeFirst()\n";
-                    case 3:
-                        message += "removeLast()\n";
+                assertEquals(message, exp.size(), sad.size());
+                for (int k = 0; k < exp.size(); k++) {
+                    assertEquals(message, exp.get(k), sad.get(k));
                 }
-                assertEquals(message, exp.get(j), sad.get(j));
             }
-
             i++;
         }
     }
