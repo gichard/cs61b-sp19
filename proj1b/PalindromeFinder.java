@@ -1,4 +1,4 @@
-import sun.awt.windows.WPrinterJob;
+/*import sun.awt.windows.WPrinterJob;*/
 
 /** This class outputs all palindromes off by N in the words file in the current directory. */
 public class PalindromeFinder {

@@ -26,7 +26,8 @@ public class Palindrome {
         if (cList.size() == 0 || cList.size() == 1) {
             return true;
         } else {
-            return cc.equalChars(cList.removeFirst(), cList.removeLast()) && isPalindromeHlpr(cList, cc);
+            return cc.equalChars(cList.removeFirst(),
+                    cList.removeLast()) && isPalindromeHlpr(cList, cc);
         }
     }
 
