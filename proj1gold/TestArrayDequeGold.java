@@ -54,7 +54,7 @@ public class TestArrayDequeGold {
                         message += "removeLast()\n";
                         break;
                 }
-                assertEquals(message, exp.size(), sad.size());
+//                assertEquals(message + "size()\n", exp.size(), sad.size());
                 for (int k = 0; k < exp.size(); k++) {
                     assertEquals(message, exp.get(k), sad.get(k));
                 }
