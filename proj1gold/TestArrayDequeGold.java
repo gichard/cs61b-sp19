@@ -44,20 +44,22 @@ public class TestArrayDequeGold {
                         message += "addLast(" + j +")\n";
                         break;
                     case 2:
-                        sad.removeFirst();
-                        exp.removeFirst();
+                        Integer a = sad.removeFirst();
+                        Integer b = exp.removeFirst();
                         message += "removeFirst()\n";
+                        assertEquals(message, a, b);
                         break;
                     case 3:
-                        sad.removeLast();
-                        exp.removeLast();
+                        Integer c = sad.removeLast();
+                        Integer d = exp.removeLast();
                         message += "removeLast()\n";
+                        assertEquals(message, c, d);
                         break;
                 }
 //                assertEquals(message + "size()\n", exp.size(), sad.size());
-                for (int k = 0; k < exp.size(); k++) {
+/*                for (int k = 0; k < exp.size(); k++) {
                     assertEquals(message, exp.get(k), sad.get(k));
-                }
+                }*/
             }
             i++;
         }
