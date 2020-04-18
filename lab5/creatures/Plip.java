@@ -1,9 +1,6 @@
 package creatures;
 
-import huglife.Creature;
-import huglife.Direction;
-import huglife.Action;
-import huglife.Occupant;
+import huglife.*;
 
 import java.awt.Color;
 import java.util.ArrayDeque;
@@ -57,7 +54,9 @@ public class Plip extends Creature {
      * that you get this exactly correct.
      */
     public Color color() {
-        g = 63;
+        r = 99;
+        b = 76;
+        g = (int) (63 + 96 * energy);
         return color(r, g, b);
     }
 
@@ -75,6 +74,7 @@ public class Plip extends Creature {
      */
     public void move() {
         // TODO
+        energy = Math.max(energy - 0.15, 0.00); // energy is non negative
     }
 
 
@@ -83,6 +83,7 @@ public class Plip extends Creature {
      */
     public void stay() {
         // TODO
+        energy = Math.min(energy + 0.2, 2.0); // max energy is 2.0
     }
 
     /**
@@ -91,7 +92,9 @@ public class Plip extends Creature {
      * Plip.
      */
     public Plip replicate() {
-        return this;
+        double loseEnergy = this.energy / 2;
+        this.energy -= loseEnergy;
+        return new Plip(loseEnergy);
     }
 
     /**
@@ -114,15 +117,29 @@ public class Plip extends Creature {
         // TODO
         // (Google: Enhanced for-loop over keys of NEIGHBORS?)
         // for () {...}
+        for (Map.Entry<Direction, Occupant> e : neighbors.entrySet()) {
+            if (e.getValue().name().equals("Clorus")) {
+                anyClorus = true;
+            } else if(e.getValue().name().equals("empty")) {
+                emptyNeighbors.addLast(e.getKey());
+            }
+        }
 
-        if (false) { // FIXME
+        if (emptyNeighbors.size() == 0) { // FIXME
             // TODO
+            return new Action(Action.ActionType.STAY);
         }
 
         // Rule 2
         // HINT: randomEntry(emptyNeighbors)
+        if (energy >= 1.0) {
+            return new Action(Action.ActionType.REPLICATE, HugLifeUtils.randomEntry(emptyNeighbors));
+        }
 
         // Rule 3
+        if (anyClorus && Math.random() <= 0.5) {
+            return new Action(Action.ActionType.MOVE, HugLifeUtils.randomEntry(emptyNeighbors));
+        }
 
         // Rule 4
         return new Action(Action.ActionType.STAY);
