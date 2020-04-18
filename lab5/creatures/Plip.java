@@ -92,7 +92,7 @@ public class Plip extends Creature {
      * Plip.
      */
     public Plip replicate() {
-        double loseEnergy = this.energy / 2;
+        double loseEnergy = this.energy / 2.0;
         this.energy -= loseEnergy;
         return new Plip(loseEnergy);
     }
