@@ -112,5 +112,34 @@ public class TestPlip {
 
 
         // We don't have Cloruses yet, so we can't test behavior for when they are nearby right now.
+        // spot clorus in neighbor, and have empty neighbor, 50% move
+        p = new Plip(0.99);
+        HashMap<Direction, Occupant> emptyClorus = new HashMap<>();
+        emptyClorus.put(Direction.TOP, new Clorus());
+        emptyClorus.put(Direction.BOTTOM, new Empty());
+        emptyClorus.put(Direction.LEFT, new Impassible());
+        emptyClorus.put(Direction.RIGHT, new Impassible());
+        expected = new Action(Action.ActionType.MOVE, Direction.BOTTOM);
+        int moveNum = 0;
+        for (int i = 0; i < 1000; i++) {
+            p = new Plip(0.99);
+            actual = p.chooseAction(emptyClorus);
+            if (actual.equals(expected)) {
+                moveNum += 1;
+            }
+        }
+
+        assertEquals(0.5, moveNum / 1000.0, 0.1);
+
+        // spot clorus in neighbor, and no empty neighbor, stay
+        p = new Plip(0.99);
+        HashMap<Direction, Occupant> impassibleClorus = new HashMap<>();
+        impassibleClorus.put(Direction.TOP, new Clorus());
+        impassibleClorus.put(Direction.BOTTOM, new Impassible());
+        impassibleClorus.put(Direction.LEFT, new Impassible());
+        impassibleClorus.put(Direction.RIGHT, new Impassible());
+        actual = p.chooseAction(impassibleClorus);
+        expected = new Action(Action.ActionType.STAY);
+        assertEquals(expected, actual);
     }
 }

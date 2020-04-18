@@ -118,7 +118,7 @@ public class Plip extends Creature {
         // (Google: Enhanced for-loop over keys of NEIGHBORS?)
         // for () {...}
         for (Map.Entry<Direction, Occupant> e : neighbors.entrySet()) {
-            if (e.getValue().name().equals("Clorus")) {
+            if (e.getValue().name().equals("clorus")) {
                 anyClorus = true;
             } else if(e.getValue().name().equals("empty")) {
                 emptyNeighbors.addLast(e.getKey());

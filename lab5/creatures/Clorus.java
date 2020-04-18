@@ -49,11 +49,13 @@ public class Clorus extends Creature {
     }
 
     public void move() {
-        energy = Math.max(0, energy - 0.03);
+//        energy = Math.max(0, energy - 0.03);
+        energy -= 0.03;
     }
 
     public void stay() {
-        energy = Math.max(0, energy - 0.01);
+//        energy = Math.max(0, energy - 0.01);
+        energy -= 0.01;
     }
 
     public Clorus replicate() {
