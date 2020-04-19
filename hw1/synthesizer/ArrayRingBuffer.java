@@ -7,8 +7,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     private int first;
     /* Index for the next enqueue. */
     private int last;
-    /* Variable for the fillCount. */
-    private int fillCount;
+/*    *//* Variable for the fillCount. *//*
+    private int fillCount; Commented for 18summer autograder*/
     /* Array for storing the buffer data. */
     private T[] rb;
 
@@ -21,7 +21,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         rb = (T[]) new Object[capacity];
         first = 0;
         last = 0;
-        fillCount = 0;
+        super.fillCount = 0;
+        super.capacity = capacity; // added for 18summer autograder
     }
 
     /**
@@ -75,7 +76,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         }
     }
 
-    // return size of the buffer
+/*    // return size of the buffer
     @Override
     public int capacity() {
         return rb.length;
@@ -85,7 +86,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     @Override
     public int fillCount() {
         return fillCount;
-    }
+    }*/
 
 
     // When you get to part 4, implement the needed code to support
@@ -95,8 +96,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         return new ArrayRingBufferIterator();
     }
 
-    /** reflective, transitive, commutable
-     * no object equals null*/
+/*    *//** reflective, transitive, commutable
+     * no object equals null*//*
     @Override
     public boolean equals(Object o) {
         if (o == null) {
@@ -115,7 +116,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
             }
             return !(thisIter.hasNext() || otherIter.hasNext()); // if equal length return true
         }
-    }
+    } Commented for 18summer autograder*/
 
     private class ArrayRingBufferIterator implements Iterator<T> {
         private int current;

@@ -57,7 +57,7 @@ public class TestArrayRingBuffer {
         }
     }
 
-    @Test
+/*    @Test
     public void testEqual() {
         ArrayRingBuffer<Integer> arb = new ArrayRingBuffer<>(10);
         arb.enqueue(1);
@@ -83,8 +83,9 @@ public class TestArrayRingBuffer {
         arb2.enqueue(9);
         arb2.enqueue(10);
 
-        assertTrue(arb.equals(arb2));
+        boolean isEq = arb.equals(arb2);
+        assertTrue(isEq);
         assertFalse(arb.equals(null));
         assertTrue(arb.equals(arb));
-    }
+    }Commented because overrided equal(Object) is commented for 18summer autograder*/
 }
