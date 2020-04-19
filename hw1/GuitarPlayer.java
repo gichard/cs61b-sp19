@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.StdAudio;
-import es.datastructur.synthesizer.GuitarString;
+/*import es.datastructur.synthesizer.GuitarString;*/
+import synthesizer.GuitarString;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaMessage;
