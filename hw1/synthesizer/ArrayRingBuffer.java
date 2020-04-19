@@ -96,8 +96,9 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         return new ArrayRingBufferIterator();
     }
 
-/*    *//** reflective, transitive, commutable
-     * no object equals null*//*
+    /** reflective, transitive, commutable
+     * no object equals null*/
+    /*
     @Override
     public boolean equals(Object o) {
         if (o == null) {
