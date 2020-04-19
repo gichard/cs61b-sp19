@@ -95,11 +95,15 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         return new ArrayRingBufferIterator();
     }
 
+    /** reflective, transitive, commutable
+     * no object equals null*/
     @Override
     public boolean equals(Object o) {
         if (o == null) {
             return false;
-        } else if (o.getClass().getSimpleName() != this.getClass().getSimpleName()) {
+        } else if (this == o) {
+            return true;
+        } else if (!o.getClass().getSimpleName().equals(this.getClass().getSimpleName())) {
             return false;
         } else {
             Iterator<T> thisIter = this.iterator();
@@ -128,9 +132,14 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
 
         @Override
         public T next() {
-            T result = rb[current];
-            current = (current + 1) % rb.length;
-            return result;
+            if (hasNext()) {
+                T result = rb[current];
+                current = (current + 1) % rb.length;
+                visited += 1;
+                return result;
+            } else {
+                return null;
+            }
         }
     }
 }
