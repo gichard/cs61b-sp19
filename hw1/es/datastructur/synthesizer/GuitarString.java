@@ -60,4 +60,3 @@ public class GuitarString {
         }
     }
 }
-    // TODO: Remove all comments that say TODO when you're done.

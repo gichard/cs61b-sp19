@@ -46,8 +46,8 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      */
     @Override
     public T dequeue() {
-        // TODO: Dequeue the first item. Don't forget to decrease fillCount and
-        //       update first.
+        // Dequeue the first item. Don't forget to decrease fillCount and
+        // update first.
         if (isEmpty()) {
             throw new RuntimeException("Ring buffer underflow");
         } else {
@@ -65,8 +65,8 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      */
     @Override
     public T peek() {
-        // TODO: Return the first item. None of your instance variables should
-        //       change.
+        // Return the first item. None of your instance variables should
+        // change.
         if (isEmpty()) {
             throw new RuntimeException("Ring buffer underflow");
         } else {
@@ -108,11 +108,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
                     return false; // item not equal
                 }
             }
-            if (thisIter.hasNext() || otherIter.hasNext()) {
-                return false; // length not equal
-            } else {
-                return true;
-            }
+            return !(thisIter.hasNext() || otherIter.hasNext()); // if equal length return true
         }
     }
 
@@ -125,7 +121,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
         }
 
         @Override
-        public boolean hasNext(){
+        public boolean hasNext() {
             return visited < fillCount;
         }
 
