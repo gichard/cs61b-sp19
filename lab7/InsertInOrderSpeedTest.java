@@ -86,7 +86,7 @@ public class InsertInOrderSpeedTest {
     public static void timeInOrderMap61B(Map61B<String, Integer> map, int N) {
         try {
             double mapTime = insertInOrder(map, N);
-            System.out.printf(map.getClass() + ": %.2f sec\n", mapTime);
+            System.out.printf(map.getClass() + ": %.5f sec\n", mapTime);
         } catch (StackOverflowError e) {
             printInfoOnStackOverflow(N);
         } catch (RuntimeException e) {
@@ -102,7 +102,7 @@ public class InsertInOrderSpeedTest {
     public static void timeInOrderTreeMap(TreeMap<String, Integer> treeMap, int N) {
         try {
             double javaTime = insertInOrder(treeMap, N);
-            System.out.printf("Java's Built-in TreeMap: %.2f sec\n", javaTime);
+            System.out.printf("Java's Built-in TreeMap: %.5f sec\n", javaTime);
         } catch (StackOverflowError e) {
             printInfoOnStackOverflow(N);
         } catch (RuntimeException e) {
@@ -118,7 +118,7 @@ public class InsertInOrderSpeedTest {
     public static void timeInOrderHashMap(HashMap<String, Integer> hashMap, int N) {
         try {
             double javaTime = insertInOrder(hashMap, N);
-            System.out.printf("Java's Built-in HashMap: %.2f sec\n", javaTime);
+            System.out.printf("Java's Built-in HashMap: %.5f sec\n", javaTime);
         } catch (StackOverflowError e) {
             printInfoOnStackOverflow(N);
         } catch (RuntimeException e) {
