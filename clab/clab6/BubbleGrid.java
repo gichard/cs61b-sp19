@@ -21,15 +21,15 @@ public class BubbleGrid {
      * and have no side-effects to grid. */
     public int[] popBubbles(int[][] darts) {
         int[] result = new int[darts.length];
-        int[] dPos;
+        /*int[] dPos;
         int drop = 0;
-        int pop = 0;
+        int pop = 0;*/
         /*for (int i = 0; i < darts.length; i++) {
             dPos = darts[i];
             if (grid)
             UnionFind bubbles = new UnionFind(bNum - pop - drop)
         }*/
-        // 0th: stuck, 1st: empty, 2nd: a unstuck set, rest are connected unstuck bubbles
+        /*// 0th: stuck, 1st: empty, 2nd: a unstuck set, rest are connected unstuck bubbles
         UnionFind bubbles = new UnionFind(grid.length * grid[0].length + 3);
         // initialize UnionFind
         for (int i = 0; i < grid.length; i++) {
@@ -78,7 +78,7 @@ public class BubbleGrid {
                     if (bubbles.find(linearInd(i, j)) == 0){
                         if (i == d[0] && j == d[1]) {
                             // the chosen bubble is now empty
-                            bubbles.union(linearInd(i, j), 1); // TODO: this will merge the stuck union to empty union
+                            bubbles.union(linearInd(i, j), 1); // this will merge the stuck union to empty union. should reset first
                         } else {
                             if (i == 0) { //first row is stuck
                                 continue;
@@ -116,6 +116,11 @@ public class BubbleGrid {
             result[iter] = bNum + bubbles.sizeOf(0) + 1 - drop;
             drop = bNum + bubbles.sizeOf(0) + 1;
             iter += 1;
+        }*/
+
+        GridUnionFind guf = new GridUnionFind(grid);
+        for (int i = 0; i < darts.length; i++) {
+            result[i] = guf.applyDart(darts[i]);
         }
         return result;
     }

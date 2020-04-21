@@ -73,4 +73,10 @@ public class UnionFind {
         }
     }
 
+    /* set a vertex's parent to -1*/
+    public void setHead(int vertex) {
+        validate(vertex);
+        vertices[vertex] = -1;
+    }
+
 }
