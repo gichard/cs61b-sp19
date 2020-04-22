@@ -66,6 +66,23 @@ public class BST<Key extends Comparable<Key>> {
         return getRandomNode(root).key;
     }
 
+    /** Returns the Internal Path Length of a tree*/
+    private int getIPL(Node n) {
+        if (n == null) {
+            return 0;
+        } else {
+            return n.size - 1 + getIPL(n.left) + getIPL(n.right);
+        }
+    }
+
+    /** Returns the Internal Path Length of this tree*/
+    public int internalPL() {
+        return getIPL(root);
+    }
+
+    public double avgDepth() {
+        return ((double) internalPL()) / root.size;
+    }
 
     /** Private methods and variables follow. There's no need to read
      *  any of this.

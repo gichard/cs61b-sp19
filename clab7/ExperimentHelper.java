@@ -15,7 +15,22 @@ public class ExperimentHelper {
      *  N = 8, OIPL: 13
      */
     public static int optimalIPL(int N) {
-        return 0;
+        int height = 0;
+        int order = 1;
+        int row = 1;
+        int result = 0;
+        for (int i = 0; i < N; i++) {
+            result = result + height;
+            if (order == row) {
+                order = 1;
+                height += 1;
+                row *= 2;
+            } else {
+                order += 1;
+            }
+        }
+
+        return result;
     }
 
     /** Returns the average depth for nodes in an optimal BST of
@@ -27,6 +42,6 @@ public class ExperimentHelper {
      * @return
      */
     public static double optimalAverageDepth(int N) {
-        return 0;
+        return ((double) optimalIPL(N)) / N;
     }
 }
