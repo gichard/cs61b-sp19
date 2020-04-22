@@ -6,6 +6,19 @@ import org.junit.Test;
 /** Tests of optional parts of lab 8. */
 public class TestBSTMapExtra {
 
+    @Test
+    public void testIter() {
+        BSTMap<String,String> q = new BSTMap<String,String>();
+        q.put("c","a");
+        q.put("b","a");
+        q.put("a","a");
+        q.put("d","a");
+        q.put("e","a");
+        for (String key : q) {
+            System.out.println(key);
+        }
+    }
+
     /*
     * Sanity test for keySet, only here because it's optional
     */
