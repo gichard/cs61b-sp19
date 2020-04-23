@@ -9,6 +9,7 @@ public class Percolation {
     private static final int OPEN = 1;
     private int size;
     private int numOpen;
+    private int[] botHeights;
 //    private int[] topFull;
 //    private int topNum;
 //    private int[] botOpen;
@@ -22,6 +23,7 @@ public class Percolation {
         size = N;
         numOpen = 0;
         grid = new int[N][N];
+        botHeights = new int[N];
 //        topFull = new int[N];
 //        topNum = 0;
 //        botOpen = new int[N];
@@ -146,6 +148,7 @@ public class Percolation {
                 j++;
             }
         }
+
         return validRes;
     }
 
@@ -159,8 +162,20 @@ public class Percolation {
             topology.union(ind, neighbor);
         }
 
-        if (row == size - 1 && topology.connected(ind, 0)) {
+        if (row == size - 1 - botHeights[col] && topology.connected(ind, 0)) {
             topology.union(ind, 1);
+        } else {
+            if (row == size - 1) {
+                botHeights[col] = 1;
+                return;
+            }
+            for (int n: ons
+                 ) {
+                if (n - linearInd(row, col) == size) {
+                    botHeights[col] = botHeights[col] + 1;
+                    return;
+                }
+            }
         }
     }
 
