@@ -9,10 +9,10 @@ public class Percolation {
     private static final int OPEN = 1;
     private int size;
     private int numOpen;
-    private int[] topFull;
-    private int topNum;
-    private int[] botOpen;
-    private int botNum;
+//    private int[] topFull;
+//    private int topNum;
+//    private int[] botOpen;
+//    private int botNum;
 
     // create N-by-N grid, with all sites initially blocked
     public Percolation(int N) {
@@ -22,17 +22,17 @@ public class Percolation {
         size = N;
         numOpen = 0;
         grid = new int[N][N];
-        topFull = new int[N];
-        topNum = 0;
-        botOpen = new int[N];
-        botNum = 0;
+//        topFull = new int[N];
+//        topNum = 0;
+//        botOpen = new int[N];
+//        botNum = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 grid[i][j] = BLOCKED;
             }
         }
 
-        topology = new WeightedQuickUnionUF(N * N + 1);
+        topology = new WeightedQuickUnionUF(N * N + 2);
     }
 
     private void validateIndex(int row, int col) {
@@ -57,8 +57,9 @@ public class Percolation {
                 topology.union(0, linearInd(row, col));
             }
             if (row == size - 1) {
-                botOpen[botNum] = linearInd(row, col);
-                botNum += 1;
+//                botOpen[botNum] = linearInd(row, col);
+//                botNum += 1;
+                topology.union(1, linearInd(row, col));
             }
         }
     }
@@ -93,23 +94,24 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        for (int i = 0; i < botNum; i++) {
-            int[] bot = xyInd(botOpen[i]);
-            if (isFull(bot[0], bot[1])) {
-                return true;
-            }
-        }
-        return false;
+        return topology.connected(0, 1);
+//        for (int i = 0; i < botNum; i++) {
+//            int[] bot = xyInd(botOpen[i]);
+//            if (isFull(bot[0], bot[1])) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
 
     private int linearInd(int row, int col) {
-        return row * size + col + 1;
+        return row * size + col + 2;
     }
 
     private int[] xyInd(int linInd) {
         int[] res = new int[2];
-        res[0] = (linInd - 1) / size;
-        res[1] = (linInd - 1) % size;
+        res[0] = (linInd - 2) / size;
+        res[1] = (linInd - 2) % size;
         return res;
     }
 
