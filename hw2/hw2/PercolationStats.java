@@ -42,11 +42,16 @@ public class PercolationStats {
         double[] ths = new double[T];
         int[] sampleSite = new int[2];
         for (int i = 0; i < T; i++) {
+            StdRandom.setSeed(i);
+            int[][] sites = new int[N][N];
             Percolation perc = pf.make(N);
             while (!perc.percolates()) {
                 sampleSite[0] = StdRandom.uniform(N - 1);
                 sampleSite[1] = StdRandom.uniform(N - 1);
-                perc.open(sampleSite[0], sampleSite[1]);
+                if (sites[sampleSite[0]][sampleSite[1]] == 0) {
+                    perc.open(sampleSite[0], sampleSite[1]);
+                    sites[sampleSite[0]][sampleSite[1]] = 1;
+                }
             }
             ths[i] = ((double) perc.numberOfOpenSites()) / N / N;
         }

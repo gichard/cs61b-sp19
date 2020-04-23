@@ -56,11 +56,11 @@ public class Percolation {
 //                topNum += 1;
                 topology.union(0, linearInd(row, col));
             }
-            if (row == size - 1) {
-//                botOpen[botNum] = linearInd(row, col);
-//                botNum += 1;
-                topology.union(1, linearInd(row, col));
-            }
+//            if (row == size - 1) {
+////                botOpen[botNum] = linearInd(row, col);
+////                botNum += 1;
+//                topology.union(1, linearInd(row, col));
+//            }
         }
     }
 
@@ -157,6 +157,10 @@ public class Percolation {
         int ind = linearInd(row, col);
         for (int neighbor: ons) {
             topology.union(ind, neighbor);
+        }
+
+        if (row == size - 1 && topology.connected(ind, 0)) {
+            topology.union(ind, 1);
         }
     }
 
