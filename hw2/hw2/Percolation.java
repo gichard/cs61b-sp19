@@ -169,6 +169,14 @@ public class Percolation {
                 botHeights[col] = 1;
                 return;
             }
+            if (col - 1 > 0 && botHeights[col - 1] + row >= size) {
+                botHeights[col] = size - row;
+                return;
+            }
+            if (col + 1 < size && botHeights[col - 1] + row >= size) {
+                botHeights[col] = size - row;
+                return;
+            }
             for (int n: ons
                  ) {
                 if (n - linearInd(row, col) == size) {
