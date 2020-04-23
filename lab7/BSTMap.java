@@ -50,7 +50,8 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V> {
 
     @Override
     public V get(K key){
-        return getHelper(key, root).val;
+        Entry res = getHelper(key, root);
+        return res==null?null:res.val;
     }
 
     @Override
@@ -269,16 +270,51 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V> {
         return new BSTSet();
     }
 
+    private void removeHlp(Entry ptr) {
+        if (ptr.isLeaf()) {
+            if (ptr.isLChild()) {
+                ptr.parent.left = null;
+            } else if (ptr.isRChild()){
+                ptr.parent.right = null;
+            } else { // is root
+                root = null;
+            }
+        } else if (ptr.left != null) {
+            ptr.key = ptr.left.key;
+            ptr.val = ptr.left.val;
+            removeHlp(ptr.left);
+        } else {
+            ptr.key = ptr.right.key;
+            ptr.val = ptr.right.val;
+            removeHlp(ptr.right);
+        }
+    }
+
     @Override
     public V remove(K key){
 //        throw new UnsupportedOperationException();
         Entry ptr = getHelper(key, root);
-        
+        if (ptr == null) {
+            return null;
+        }
+        V resVal = ptr.val;
+        removeHlp(ptr);
+        size -= 1;
+
+        return resVal;
     }
 
     @Override
     public V remove(K key, V value){
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+        Entry ptr = getHelper(key, root);
+        if (ptr == null || ptr.val != value) {
+            return null;
+        }
+        removeHlp(ptr);
+        size -= 1;
+
+        return value;
     }
 
     @Override
