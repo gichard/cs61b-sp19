@@ -38,7 +38,7 @@ public class PercolationStats {
         return mean() + 1.96 * stddev() / Math.sqrt(numExp);
     }
 
-    private double[] monteCarloSimulation(int N, int T, PercolationFactory pf){
+    private double[] monteCarloSimulation(int N, int T, PercolationFactory pf) {
         double[] ths = new double[T];
         int[] sampleSite = new int[2];
         for (int i = 0; i < T; i++) {

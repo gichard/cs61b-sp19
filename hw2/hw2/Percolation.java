@@ -32,7 +32,7 @@ public class Percolation {
             }
         }
 
-        topology = new WeightedQuickUnionUF(N * N);
+        topology = new WeightedQuickUnionUF(N * N + 1);
     }
 
     private void validateIndex(int row, int col) {
@@ -52,8 +52,9 @@ public class Percolation {
             grid[row][col] = OPEN;
             unionOpenNeighbor(row, col);
             if (row == 0) {
-                topFull[topNum] = col;
-                topNum += 1;
+//                topFull[topNum] = col;
+//                topNum += 1;
+                topology.union(0, linearInd(row, col));
             }
             if (row == size - 1) {
                 botOpen[botNum] = linearInd(row, col);
@@ -74,12 +75,15 @@ public class Percolation {
         if (row == 0) {
             return grid[row][col] == OPEN;
         }
-        for (int i = 0; i < topNum; i++) {
-            if (topology.connected(linearInd(row, col), topFull[i])) {
-                return true;
-            }
-        }
-        return false;
+
+        return topology.connected(linearInd(row, col), 0);
+//        for (int i = 0; i < topNum; i++) {
+//            if (topology.connected(linearInd(row, col), topFull[i])) {
+//                return true;
+//            }
+//        }
+
+//        return false;
     }
 
     // number of open sites
@@ -99,13 +103,13 @@ public class Percolation {
     }
 
     private int linearInd(int row, int col) {
-        return row * size + col;
+        return row * size + col + 1;
     }
 
     private int[] xyInd(int linInd) {
         int[] res = new int[2];
-        res[0] = linInd / size;
-        res[1] = linInd % size;
+        res[0] = (linInd - 1) / size;
+        res[1] = (linInd - 1) % size;
         return res;
     }
 
