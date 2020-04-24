@@ -5,16 +5,11 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
     private WeightedQuickUnionUF topology;
     private int[][] grid;
+    private WeightedQuickUnionUF shadow;
     private static final int BLOCKED = 0;
     private static final int OPEN = 1;
     private int size;
     private int numOpen;
-    // the max height of each column that's connected to a bottom open site
-    private int[] botHeights;
-//    private int[] topFull;
-//    private int topNum;
-//    private int[] botOpen;
-//    private int botNum;
 
     // create N-by-N grid, with all sites initially blocked
     public Percolation(int N) {
@@ -24,11 +19,7 @@ public class Percolation {
         size = N;
         numOpen = 0;
         grid = new int[N][N];
-        botHeights = new int[N];
-//        topFull = new int[N];
-//        topNum = 0;
-//        botOpen = new int[N];
-//        botNum = 0;
+
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 grid[i][j] = BLOCKED;
@@ -36,6 +27,7 @@ public class Percolation {
         }
 
         topology = new WeightedQuickUnionUF(N * N + 2);
+        shadow = new WeightedQuickUnionUF(N * N + 2);
     }
 
     private void validateIndex(int row, int col) {
@@ -55,15 +47,12 @@ public class Percolation {
             grid[row][col] = OPEN;
             unionOpenNeighbor(row, col);
             if (row == 0) {
-//                topFull[topNum] = col;
-//                topNum += 1;
                 topology.union(0, linearInd(row, col));
+                shadow.union(0, linearInd(row, col));
             }
-//            if (row == size - 1) {
-////                botOpen[botNum] = linearInd(row, col);
-////                botNum += 1;
-//                topology.union(1, linearInd(row, col));
-//            }
+            if (row == size - 1) {
+                topology.union(1, linearInd(row, col));
+            }
         }
     }
 
@@ -80,14 +69,7 @@ public class Percolation {
             return grid[row][col] == OPEN;
         }
 
-        return topology.connected(linearInd(row, col), 0);
-//        for (int i = 0; i < topNum; i++) {
-//            if (topology.connected(linearInd(row, col), topFull[i])) {
-//                return true;
-//            }
-//        }
-
-//        return false;
+        return topology.connected(linearInd(row, col), 0) && shadow.connected(linearInd(row, col), 0);
     }
 
     // number of open sites
@@ -98,13 +80,6 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         return topology.connected(0, 1);
-//        for (int i = 0; i < botNum; i++) {
-//            int[] bot = xyInd(botOpen[i]);
-//            if (isFull(bot[0], bot[1])) {
-//                return true;
-//            }
-//        }
-//        return false;
     }
 
     private int linearInd(int row, int col) {
@@ -155,58 +130,13 @@ public class Percolation {
 
     private void unionOpenNeighbor(int row, int col) {
         int[] ons = openNeighbors(row, col);
-        boolean outNeighbor = false;
-        int nRow;
-        int nCol;
-        if (ons == null) {
-            if (row == size - 1) {
-                botHeights[col] = 1;
-            }
-            return;
-        }
         int ind = linearInd(row, col);
-        for (int neighbor: ons) {
-            topology.union(ind, neighbor);
-//            nRow = xyInd(neighbor)[0];
-            nCol = xyInd(neighbor)[1];
-            outNeighbor = outNeighbor || topology.connected(ind, linearInd(size - 1, nCol)) ||
-                    (botHeights[nCol] > 0 && topology.connected(ind, linearInd(size - botHeights[nCol], nCol)));
-        }
-
-        if (topology.connected(ind, 0) && outNeighbor) { // the down neighbor is a OUTLET
-            topology.union(ind, 1);
-        }
-
-        // update botHeights
-//        if (row == size - 1) {
-//            botHeights[col] = 1;
-//            return;
-//        }
-        if (row + botHeights[col] == size - 1) {
-            botHeights[col] += 1;
-            return;
-        }
-        if (col - 1 > 0 && botHeights[col - 1] + row >= size) { // below left height
-            if (botHeights[col - 1] > 0 &&
-                    topology.connected(ind, linearInd(size - botHeights[col - 1], col - 1))) {
-                botHeights[col] = Math.max(botHeights[col], (size - row));
+        if (ons != null){
+            for (int neighbor: ons) {
+                topology.union(ind, neighbor);
+                shadow.union(ind, neighbor);
             }
-            return;
         }
-        if (col + 1 < size && botHeights[col + 1] + row >= size) { // below right height
-            if (botHeights[col + 1] > 0 &&
-                    topology.connected(ind, linearInd(size - botHeights[col + 1], col + 1))) {
-                botHeights[col] = Math.max(botHeights[col], (size - row));
-            }
-            return;
-        }
-        /*for (int n: ons
-             ) {
-            if (n - linearInd(row, col) == size) {
-                botHeights[col] = botHeights[col] + 1;
-                return;
-            }
-        }*/
     }
 
     // use for unit testing (not required, but keep this here for the autograder)
