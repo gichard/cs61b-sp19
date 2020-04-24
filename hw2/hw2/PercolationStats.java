@@ -18,35 +18,28 @@ public class PercolationStats {
         numExp = T;
         thresholds = monteCarloSimulation(N, T, pf);
         mean = StdStats.mean(thresholds);
-        stddev = (numExp == 1? Double.NaN: StdStats.stddev(thresholds));
+        stddev = (numExp == 1 ? Double.NaN : StdStats.stddev(thresholds));
         confLow = mean - 1.96 * stddev / Math.sqrt(numExp);
         confHigh = mean + 1.96 * stddev / Math.sqrt(numExp);
     }
 
     // sample mean of percolation threshold
     public double mean() {
-//        return StdStats.mean(thresholds);
         return mean;
     }
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-//        if (numExp == 1) {
-//            return Double.NaN;
-//        }
-//        return StdStats.stddev(thresholds);
         return stddev;
     }
 
     // low endpoint of 95% confidence interval
     public double confidenceLow() {
-//        return mean() - 1.96 * stddev() / Math.sqrt(numExp);
         return confLow;
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHigh() {
-//        return mean() + 1.96 * stddev() / Math.sqrt(numExp);
         return confHigh;
     }
 
@@ -54,7 +47,6 @@ public class PercolationStats {
         double[] ths = new double[T];
         int[] sampleSite = new int[2];
         for (int i = 0; i < T; i++) {
-            StdRandom.setSeed(i);
             int[][] sites = new int[N][N];
             Percolation perc = pf.make(N);
             while (!perc.percolates()) {

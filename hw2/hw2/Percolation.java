@@ -69,7 +69,8 @@ public class Percolation {
             return grid[row][col] == OPEN;
         }
 
-        return topology.connected(linearInd(row, col), 0) && shadow.connected(linearInd(row, col), 0);
+        return topology.connected(linearInd(row, col), 0)
+                && shadow.connected(linearInd(row, col), 0);
     }
 
     // number of open sites
@@ -131,7 +132,7 @@ public class Percolation {
     private void unionOpenNeighbor(int row, int col) {
         int[] ons = openNeighbors(row, col);
         int ind = linearInd(row, col);
-        if (ons != null){
+        if (ons != null) {
             for (int neighbor: ons) {
                 topology.union(ind, neighbor);
                 shadow.union(ind, neighbor);
