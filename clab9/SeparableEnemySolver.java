@@ -5,6 +5,7 @@ import java.util.*;
 public class SeparableEnemySolver {
 
     Graph g;
+    Set<String> nodes;
 
     /**
      * Creates a SeparableEnemySolver for a file with name filename. Enemy
@@ -12,19 +13,52 @@ public class SeparableEnemySolver {
      */
     SeparableEnemySolver(String filename) throws java.io.FileNotFoundException {
         this.g = graphFromFile(filename);
+        nodes = g.labels();
     }
 
     /** Alterntive constructor that requires a Graph object. */
     SeparableEnemySolver(Graph g) {
         this.g = g;
+        nodes = g.labels();
     }
 
     /**
      * Returns true if input is separable, false otherwise.
      */
     public boolean isSeparable() {
-        // TODO: Fix me
-        return false;
+        if (nodes.size() == 0) {
+            return true;
+        }
+        String start;
+        Set<String> AG;
+        Set<String> BG;
+        while (nodes.size() > 0) {
+            start = nodes.iterator().next();
+            AG = new HashSet<>();
+            BG = new HashSet<>();
+            AG.add(start);
+            if (!dfsHelper(start, AG, BG)) {
+                return false;
+            }
+            nodes.removeAll(AG);
+            nodes.removeAll(BG);
+        }
+        return true;
+    }
+
+    private boolean dfsHelper(String node, Set<String> AGroup, Set<String> BGroup) {
+        for (String neighbor: g.neighbors(node)
+             ) {
+            if (!BGroup.contains(neighbor) && !AGroup.contains(neighbor)) {
+                BGroup.add(neighbor);
+                if (!dfsHelper(neighbor, BGroup, AGroup)) {
+                    return false;
+                }
+            } else if (AGroup.contains(neighbor)){
+                return false;
+            }
+        }
+        return true;
     }
 
 
