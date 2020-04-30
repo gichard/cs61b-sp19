@@ -21,8 +21,8 @@ public class BnBSolver {
         }
 
         List<Pair<Bear, Bed>> sorted = quickSortBnB(unsorted);
-        solvedBears = new LinkedList<>();
-        solvedBeds = new LinkedList<>();
+        solvedBears = new ArrayList<>();
+        solvedBeds = new ArrayList<>();
         for (Pair<Bear, Bed> p: sorted
              ) {
             solvedBears.add(p.first());
@@ -49,9 +49,9 @@ public class BnBSolver {
             return unsorted;
         }
 
-        List<Pair<Bear, Bed>> left = new LinkedList<>();
-        List<Pair<Bear, Bed>> equal = new LinkedList<>();
-        List<Pair<Bear, Bed>> right = new LinkedList<>();
+        List<Pair<Bear, Bed>> left = new ArrayList<>();
+        List<Pair<Bear, Bed>> equal = new ArrayList<>();
+        List<Pair<Bear, Bed>> right = new ArrayList<>();
 
         partition(unsorted, getRandomPair(unsorted), left, equal, right);
 
@@ -128,7 +128,7 @@ public class BnBSolver {
     }
 
     private List<Pair<Bear, Bed>> catenate(List<Pair<Bear, Bed>> l1, List<Pair<Bear, Bed>> l2) {
-        List<Pair<Bear, Bed>> catenated = new LinkedList<>();
+        List<Pair<Bear, Bed>> catenated = new ArrayList<>();
         for (Pair<Bear, Bed> item: l1
              ) {
             catenated.add(item);
