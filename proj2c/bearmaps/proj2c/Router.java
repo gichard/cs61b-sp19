@@ -1,12 +1,13 @@
 package bearmaps.proj2c;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bearmaps.hw4.AStarSolver;
-import bearmaps.hw4.WeirdSolver;
+import bearmaps.hw4.streetmap.Node;
 
 /**
  * This class acts as a helper for the RoutingAPIHandler.
@@ -42,9 +43,58 @@ public class Router {
      * @return A list of NavigatiionDirection objects corresponding to the input
      * route.
      */
-    public static List<NavigationDirection> routeDirections(AugmentedStreetMapGraph g, List<Long> route) {
+    public static List<NavigationDirection> routeDirections(AugmentedStreetMapGraph g,
+                                                            List<Long> route) {
         /* fill in for part IV */
-        return null;
+        List<NavigationDirection> res = new LinkedList<>();
+        NavigationDirection dir = new NavigationDirection();
+        Node start = g.getNode(route.remove(0));
+        Node next = g.getNode(route.get(0));
+        String startWay = g.getEdgeName(start.id(), next.id());
+        if (startWay == null) {
+            startWay = NavigationDirection.UNKNOWN_ROAD;
+        }
+        double startBearing = NavigationDirection.bearing(start.lon(), next.lon(), start.lat(), next.lat());
+        dir.way = startWay;
+        dir.direction = NavigationDirection.START;
+//        dir.distance = g.estimatedDistanceToGoal(start.id(), next.id());
+        dir.distance = 0.0; // distances are calculated in the helper function
+        res.add(dir);
+
+        routeDirHelper(g, route, res, start, startBearing);
+
+        return res;
+    }
+
+    private static void routeDirHelper(AugmentedStreetMapGraph g, List<Long> route,
+                                       List<NavigationDirection> dirBuilder, Node curNode, double curBearing) {
+        if (route.size() == 0) {
+            return;
+        }
+        Node next = g.getNode(route.remove(0));
+        String nextWay = g.getEdgeName(curNode.id(), next.id());
+        int newestDir = dirBuilder.size() - 1;
+
+        if (nextWay == null) {
+            nextWay = NavigationDirection.UNKNOWN_ROAD;
+        }
+
+        double newBearing;
+        if (nextWay.equals(dirBuilder.get(newestDir).way)) { // same way, increment distance
+            NavigationDirection newDir = dirBuilder.remove(newestDir);
+            newDir.distance += g.estimatedDistanceToGoal(curNode.id(), next.id());
+            newBearing = NavigationDirection.bearing(curNode.lon(), next.lon(), curNode.lat(), next.lat());
+            dirBuilder.add(newDir);
+        } else { // change way, add new NavigationDirection
+            NavigationDirection newDir = new NavigationDirection();
+            newDir.distance = g.estimatedDistanceToGoal(curNode.id(), next.id());
+            newBearing = NavigationDirection.bearing(curNode.lon(), next.lon(), curNode.lat(), next.lat());
+            newDir.direction = NavigationDirection.getDirection(curBearing, newBearing);
+            newDir.way = nextWay;
+            dirBuilder.add(newDir);
+        }
+
+        routeDirHelper(g, route, dirBuilder, next, newBearing);
     }
 
     /**

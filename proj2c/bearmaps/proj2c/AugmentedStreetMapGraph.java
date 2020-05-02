@@ -1,5 +1,6 @@
 package bearmaps.proj2c;
 
+import bearmaps.hw4.WeightedEdge;
 import bearmaps.hw4.streetmap.Node;
 import bearmaps.hw4.streetmap.StreetMapGraph;
 import bearmaps.proj2ab.KDTree;
@@ -20,17 +21,19 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private MyTrieSet cleanNames;
     private Map<String, String> fullNames;
     private Map<String, List<Node>> nodeSearcher;
+    private Map<Long, Node> indexedNodes;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         // You might find it helpful to uncomment the line below:
-        List<Node> nodes = this.getNodes();
+        List<Node> lNodes = this.getNodes();
         pNodes = new HashMap<>();
         cleanNames = new MyTrieSet();
         fullNames = new HashMap<>();
         nodeSearcher = new HashMap<>();
+        indexedNodes = new HashMap<>();
 
-        for (Node n: nodes
+        for (Node n: lNodes
              ) {
             if (neighbors(n.id()).size() > 0) {
                 Point newP = new Point(n.lon(), n.lat());
@@ -48,6 +51,8 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 nodeList.add(n);
                 nodeSearcher.put(cName, nodeList);
             }
+
+            indexedNodes.put(n.id(), n);
         }
         searchTree = new KDTree(new LinkedList<Point>(pNodes.keySet()));
     }
@@ -123,4 +128,24 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         return s.replaceAll("[^a-zA-Z ]", "").toLowerCase();
     }
 
+    /**
+     * For part IV. retrieve Node by its id*/
+    public Node getNode(long id) {
+        return indexedNodes.get(id);
+    }
+
+    /** returns name of the way from v to w
+     * this is the correct way to get the name of ways. many vertex has name null,
+     * despite it is a part of a way*/
+    public String getEdgeName(long v, long w) {
+        String res = null;
+        for (WeightedEdge<Long> e: neighbors(v)
+             ) {
+            if (e.to().equals(w)) {
+                res = e.getName();
+            }
+        }
+
+        return res;
+    }
 }
