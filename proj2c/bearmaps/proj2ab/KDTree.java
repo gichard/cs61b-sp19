@@ -27,7 +27,7 @@ public class KDTree implements PointSet {
         } else if (pN.compareTo(insertNode) < 0) {
             pN.changeComp();
             insertNode.left = addHelper(pN, insertNode.left);
-        } else if (pN.compareTo(insertNode) > 0) {
+        } else if (pN.compareTo(insertNode) >= 0) {
             pN.changeComp();
             insertNode.right = addHelper(pN, insertNode.right);
         }
@@ -51,7 +51,7 @@ public class KDTree implements PointSet {
         double lB;
         double rB;
         if (next.left != null) {
-            if (next.compareTo(target) > 0 || next.bestToTarget(target.p) < best) {
+            if (next.compareTo(target) >= 0 || next.bestToTarget(target.p) < best) {
                 PNode lBest = nearestHelper(target, next.left, bestPoint);
                 lB = dist(lBest.p, target.p);
                 if (best >= lB) {

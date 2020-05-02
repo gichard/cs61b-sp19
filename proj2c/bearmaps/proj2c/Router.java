@@ -46,24 +46,24 @@ public class Router {
     public static List<NavigationDirection> routeDirections(AugmentedStreetMapGraph g,
                                                             List<Long> route) {
         /* fill in for part IV */
-        List<NavigationDirection> res = new LinkedList<>();
-        NavigationDirection dir = new NavigationDirection();
-        Node start = g.getNode(route.remove(0));
-        Node next = g.getNode(route.get(0));
-        String startWay = g.getEdgeName(start.id(), next.id());
-        if (startWay == null) {
-            startWay = NavigationDirection.UNKNOWN_ROAD;
-        }
-        double startBearing = NavigationDirection.bearing(start.lon(), next.lon(), start.lat(), next.lat());
-        dir.way = startWay;
-        dir.direction = NavigationDirection.START;
-//        dir.distance = g.estimatedDistanceToGoal(start.id(), next.id());
-        dir.distance = 0.0; // distances are calculated in the helper function
-        res.add(dir);
-
-        routeDirHelper(g, route, res, start, startBearing);
-
-        return res;
+//        List<NavigationDirection> res = new LinkedList<>();
+//        NavigationDirection dir = new NavigationDirection();
+//        Node start = g.getNode(route.remove(0));
+//        Node next = g.getNode(route.get(0));
+//        String startWay = g.getEdgeName(start.id(), next.id());
+//        if (startWay == null) {
+//            startWay = NavigationDirection.UNKNOWN_ROAD;
+//        }
+//        double startBearing = NavigationDirection.bearing(start.lon(), next.lon(), start.lat(), next.lat());
+//        dir.way = startWay;
+//        dir.direction = NavigationDirection.START;
+//        dir.distance = 0.0; // distances are calculated in the helper function
+//        res.add(dir);
+//
+//        routeDirHelper(g, route, res, start, startBearing);
+//
+//        return res;
+        return null;
     }
 
     private static void routeDirHelper(AugmentedStreetMapGraph g, List<Long> route,
