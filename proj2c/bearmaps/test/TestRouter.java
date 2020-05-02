@@ -50,6 +50,18 @@ public class TestRouter {
         }
     }
 
+    // Only the 3rd test fails testShortestPath() due to wrong start and end Nodes
+    //    Expected :[2345064433, 2345064429, 2345064428, 35718832, 2345064427]
+    //    Actual   :[2345064429, 2345064433, 35718834, 2345064432, 2345064430, 2345064431, 35718836]
+    @Test
+    public void testKdTree() throws Exception {
+        List<Map<String, Double>> testParams = paramsFromFile();
+        List<List<Long>> expectedResults = resultsFromFile();
+        Map<String, Double> params = testParams.get(3);
+        assertEquals(2345064433L, graph.closest(params.get("start_lon"), params.get("start_lat")));
+        assertEquals(2345064427L, graph.closest(params.get("end_lon"), params.get("end_lat")));
+    }
+
     private List<Map<String, Double>> paramsFromFile() throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(PARAMS_FILE), Charset.defaultCharset());
         List<Map<String, Double>> testParams = new ArrayList<>();

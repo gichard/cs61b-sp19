@@ -74,10 +74,15 @@ public class KDTree implements PointSet {
         return bestPoint;
     }
 
+//    private double dist(Point a, Point b) {
+//        return (a.getX() - b.getX()) * (a.getX() - b.getX())
+//                + (a.getY() - b.getY()) * (a.getY() - b.getY());
+//    }
+
     private double dist(Point a, Point b) {
-        return (a.getX() - b.getX()) * (a.getX() - b.getX())
-                + (a.getY() - b.getY()) * (a.getY() - b.getY());
+        return Point.distance(a, b); // returns haversine distance
     }
+
 
     private static class PNode implements Comparable<PNode> {
         Point p;
