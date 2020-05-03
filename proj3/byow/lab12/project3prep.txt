@@ -1,29 +1,31 @@
 Q: Can you think of an analogy between the process of tesselating hexagons and randomly generating a world using rooms and hallways? 
 What is the hexagon and what is the tesselation on the Project 3 side?
 
-A:
+A: the rooms and hallways are hexagons, arranging them correctly is the tesselation process.
 
 -----
 Q: If you were to start working on world generation, what kind of method would you think of writing first? 
 Think back to the lab and the process used to eventually get to tesselating hexagons.
 
-A:
+A: first write the methods to generate rooms and hallways with variable parameters.
 
 -----
 Q: What distinguishes a hallway from a room? How are they similar?
 
-A:
+A: distinguishes: a room has a regular shape(rectangle or hexagon, etc.), while hallways are more like lines and can take turns(or intersect with other hallways to form irregular shapes);
+    similarities: both consists of walls and floors, and have variable parameters;
+                  both connected with a hallway or room via an openings on the wall;
 
 -----
 Q: For tesselating hexagons, one of the hardest parts is figuring out where to place each hexagon/how to easily place hexagons on screen in an algorithmic way. 
 After looking at your own implemention, consider the implementation provided near the end of the lab. 
 How did your implementation differ from the given one? What lessons can be learned from it?
 
-A:
+A: I first implement an addRow() method, but its not easy to figure out corresponding helper methods. Then try to addDiagonals(), finally realised it is easiest to addColbyCol. decomposing a problem into small pieces helps a lot.
 
 -----
 Q: Consider an algorithm for placing rooms and hallways on your map. 
 Ideally, consider many algorithms and think about what makes some easier or harder to implement. Try and bring those ideas together into a single simple algorithm which accomplishes the task. 
 In general, algorithms with as few edge cases as possible are better algorithms.
 
-A:
+A: 
