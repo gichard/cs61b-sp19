@@ -3,6 +3,11 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 public class Engine {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
@@ -45,7 +50,42 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
 
-        TETile[][] finalWorldFrame = null;
+        Map<String, Object> params = parseString(input);
+        long seed = (long) params.get("seed");
+        RandomWorld rw = new RandomWorld(seed, WIDTH, HEIGHT);
+
+        TETile[][] finalWorldFrame = rw.world;
+        ter.initialize(WIDTH, HEIGHT);
+        ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
     }
+
+    private Map<String, Object> parseString(String input) {
+        if (input == null) {
+            throw new IllegalArgumentException();
+        }
+        Map<String, Object> res = new HashMap<>();
+
+        long seed = 0L;
+        for (int i = 0; i < input.length(); i++) {
+            if ("N".equals(String.valueOf(input.charAt(i)))) {
+                continue;
+            } else if ("S".equals(String.valueOf(input.charAt(i)))) {
+                if (i < input.length() - 1) {
+                    List<Character> actions = new LinkedList<>();
+                    for (int a = i + 1; a < input.length(); a++) {
+                        actions.add(input.charAt(a));
+                    }
+                    res.put("actions", actions);
+                }
+            } else {
+                seed = seed * 10 + Integer.parseInt(String.valueOf(input.charAt(i)));
+            }
+        }
+        res.put("seed", seed);
+
+        return res;
+    }
+
+    
 }

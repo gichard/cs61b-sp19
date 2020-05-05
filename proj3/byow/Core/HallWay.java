@@ -5,6 +5,7 @@ import java.awt.*;
 public class HallWay extends Building {
     private static final int DEFAULT_WIDTH = 5;
     private static final int DEFAULT_HEIGHT = 3;
+    private static final String bType = "HallWay";
 
     public HallWay() {
         this(DEFAULT_WIDTH, DEFAULT_HEIGHT, new Point(0, 0));
@@ -21,6 +22,11 @@ public class HallWay extends Building {
 
     public static HallWay verticalHallway(int length, Point pos) {
         return new HallWay(DEFAULT_HEIGHT, length, pos);
+    }
+
+    @Override
+    public String getType() {
+        return bType;
     }
 
     public static void main(String[] args) {
