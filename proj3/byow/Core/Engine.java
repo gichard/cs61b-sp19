@@ -1,5 +1,8 @@
 package byow.Core;
 
+import byow.Core.Input.InputSource;
+import byow.Core.Input.KeyboardInputSource;
+import byow.Core.Input.StringInputDevice;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 
@@ -13,12 +16,20 @@ public class Engine {
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
+    private Map<String, Object> params = new HashMap<>();
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+        InputSource si = new KeyboardInputSource();
+        getSeed(si);
+        RandomWorld rw = new RandomWorld((long) params.get("seed"), WIDTH, HEIGHT);
+
+        TETile[][] finalWorldFrame = rw.world;
+        ter.initialize(WIDTH, HEIGHT);
+        ter.renderFrame(finalWorldFrame);
     }
 
     /**
@@ -50,7 +61,8 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
 
-        Map<String, Object> params = parseString(input);
+        InputSource si = new StringInputDevice(input);
+        parseString(si);
         long seed = (long) params.get("seed");
         RandomWorld rw = new RandomWorld(seed, WIDTH, HEIGHT);
 
@@ -60,32 +72,33 @@ public class Engine {
         return finalWorldFrame;
     }
 
-    private Map<String, Object> parseString(String input) {
+    private void parseString(InputSource input) {
         if (input == null) {
             throw new IllegalArgumentException();
         }
-        Map<String, Object> res = new HashMap<>();
 
-        long seed = 0L;
-        for (int i = 0; i < input.length(); i++) {
-            if ("N".equals(String.valueOf(input.charAt(i)))) {
-                continue;
-            } else if ("S".equals(String.valueOf(input.charAt(i)))) {
-                if (i < input.length() - 1) {
-                    List<Character> actions = new LinkedList<>();
-                    for (int a = i + 1; a < input.length(); a++) {
-                        actions.add(input.charAt(a));
-                    }
-                    res.put("actions", actions);
-                }
-            } else {
-                seed = seed * 10 + Integer.parseInt(String.valueOf(input.charAt(i)));
+        getSeed(input);
+        if (input.possibleNextInput()) {
+            List<Character> actions = new LinkedList<>();
+            while (input.possibleNextInput()) {
+                actions.add(input.getNextKey());
             }
+            this.params.put("actions", actions);
         }
-        res.put("seed", seed);
-
-        return res;
     }
 
-
+    private void getSeed(InputSource input) {
+        long seed = 0L;
+        while (input.possibleNextInput()){
+            char k = input.getNextKey();
+            if ("N".equals(String.valueOf(k))) {
+                continue;
+            } else if ("S".equals(String.valueOf(k))) {
+                this.params.put("seed", seed);
+                return;
+            } else {
+                seed = seed * 10 + Integer.parseInt(String.valueOf(k));
+            }
+        }
+    }
 }
