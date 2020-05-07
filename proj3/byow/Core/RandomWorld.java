@@ -1,5 +1,7 @@
 package byow.Core;
 
+import byow.Core.Creature.Animal;
+import byow.Core.Creature.Player;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
@@ -22,6 +24,8 @@ public class RandomWorld {
     private Building[] buildings;
     private int numB;
 
+    public Animal[] animals;
+
     public RandomWorld() {
         this(DEFAULT_SEED, WORLD_WIDTH, WORLD_HEIGHT);
     }
@@ -43,6 +47,11 @@ public class RandomWorld {
         }
 
         generateRWorld();
+        spawnAnimals();
+    }
+
+    public Player getPlayer() {
+        return (Player) animals[0];
     }
 
     // generate random world by a bottom up approach
@@ -97,6 +106,7 @@ public class RandomWorld {
         return false;
     }
 
+    // check if a new building can not fit into the world
     private boolean isOut(int bWidth, int bHeight, Point bPos) {
         int x = bPos.x;
         int y = bPos.y;
@@ -220,6 +230,33 @@ public class RandomWorld {
                 }
                 break;
         }
+    }
+
+    private void spawnAnimals() {
+        int numAnimals = uniform(r, 1, 2); // for now, only spawn a player
+        animals = new Animal[numAnimals];
+        Animal p = new Player(10, 10);
+        p.spawn(spawnPos());
+        animals[0] = p;
+    }
+
+    // randomly generate a spawn point
+    private Point spawnPos() {
+        Point res = randomPoint();
+        while (!validSPoint(res)) {
+            res = randomPoint();
+        }
+        return res;
+    }
+
+    // check if a point is a valid spawn point
+    private boolean validSPoint(Point sp) {
+        return world[sp.x][sp.y].equals(Tileset.FLOOR);
+    }
+
+    // generate a random point in the world
+    private Point randomPoint() {
+        return new Point(uniform(r, 0, wWidth), uniform(r, 0, wHeight));
     }
 
     private static void testConnect() {

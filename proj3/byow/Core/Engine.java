@@ -1,22 +1,27 @@
 package byow.Core;
 
+import byow.Core.Creature.Direction;
+import byow.Core.Creature.Player;
 import byow.Core.Input.InputSource;
 import byow.Core.Input.KeyboardInputSource;
 import byow.Core.Input.StringInputDevice;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
+import byow.TileEngine.Tileset;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class Engine {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
+    public static final int REAL_WIDTH =  500;
+    public static final int REAL_HEIGHT = 500;
     private Map<String, Object> params = new HashMap<>();
+    public RandomWorld rw;
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
@@ -25,11 +30,13 @@ public class Engine {
     public void interactWithKeyboard() {
         InputSource si = new KeyboardInputSource();
         getSeed(si);
-        RandomWorld rw = new RandomWorld((long) params.get("seed"), WIDTH, HEIGHT);
+        RandomWorld rw = new RandomWorld((long) params.get("seed"), REAL_HEIGHT, REAL_HEIGHT);
 
-        TETile[][] finalWorldFrame = rw.world;
-        ter.initialize(WIDTH, HEIGHT);
-        ter.renderFrame(finalWorldFrame);
+        SlidingFrame sf = new SlidingFrame(rw.world, WIDTH, HEIGHT, rw.getPlayer());
+
+        TETile[][] finalWorldFrame = sf.getRenderTiles();
+        ter.initialize(WIDTH, HEIGHT + UI.HEADER, 0, UI.FOOT);
+        ter.renderFrame(finalWorldFrame, 5, Tileset.FLOOR);
     }
 
     /**
@@ -64,7 +71,7 @@ public class Engine {
         InputSource si = new StringInputDevice(input);
         parseString(si);
         long seed = (long) params.get("seed");
-        RandomWorld rw = new RandomWorld(seed, WIDTH, HEIGHT);
+        rw = new RandomWorld(seed, WIDTH, HEIGHT);
 
         TETile[][] finalWorldFrame = rw.world;
         ter.initialize(WIDTH, HEIGHT);
@@ -101,4 +108,44 @@ public class Engine {
             }
         }
     }
+
+    private void saveExit(InputSource input) {
+        char q = input.getNextKey();
+        if (q == 'Q') {
+            // save game state
+        }
+    }
+
+    private void performAction(char action) {
+        ((LinkedList<Character>) params.get("actions")).add(action);
+        Point dir = new Point(0, 0);
+        switch (action) {
+            case 'W':
+                dir = Direction.UP;
+                break;
+            case 'A':
+                dir = Direction.LEFT;
+                break;
+            case 'S':
+                dir = Direction.DOWN;
+                break;
+            case 'D':
+                dir = Direction.RIGHT;
+                break;
+        }
+        if (isActionValid(dir)) {
+            rw.getPlayer().move(dir);
+        }
+    }
+
+    private boolean isActionValid(Point dir) {
+        Point target = new Point();
+        Point pPos = rw.getPlayer().getPos();
+        target.x = dir.x + pPos.x;
+        target.y = dir.y + pPos.y;
+        // only check if the target is a wall
+        // current game won't allow the player to get to world's border
+        return !rw.world[target.x][target.y].equals(Tileset.WALL);
+    }
+
 }

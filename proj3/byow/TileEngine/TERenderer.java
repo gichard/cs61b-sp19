@@ -1,5 +1,7 @@
 package byow.TileEngine;
 
+import byow.Core.Creature.Player;
+import byow.Core.UI;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.Color;
@@ -84,6 +86,22 @@ public class TERenderer {
      * @param world the 2D TETile[][] array to render
      */
     public void renderFrame(TETile[][] world) {
+        prepareFrame(world);
+
+        StdDraw.show();
+    }
+
+    public void renderFrame(TETile[][] world, int hp, TETile hT) {
+        prepareFrame(world, hp, hT);
+
+        StdDraw.show();
+    }
+
+    public void prepareFrame(TETile[][] world) {
+        prepareFrame(world, -1, null);
+    }
+
+    public void prepareFrame(TETile[][] world, int hp, TETile hT) {
         int numXTiles = world.length;
         int numYTiles = world[0].length;
         StdDraw.clear(new Color(0, 0, 0));
@@ -96,6 +114,9 @@ public class TERenderer {
                 world[x][y].draw(x + xOffset, y + yOffset);
             }
         }
-        StdDraw.show();
+
+        if (hT != null && hp >= 0) {
+            UI.drawStatus(hp, hT, world.length, world[0].length + UI.HEADER);
+        }
     }
 }
