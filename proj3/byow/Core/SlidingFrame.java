@@ -70,7 +70,7 @@ public class SlidingFrame {
         resetFrame();
     }
 
-    // slide the frame according to dir, 0, 1, 2, 3 for up, down, left, right
+    // slide the frame according to dir, 1, 2, 3, 4 for up, down, left, right
     private void slideFrame(int dir) {
         switch (dir) {
             case 1:
@@ -115,13 +115,13 @@ public class SlidingFrame {
         if (playerPos.x < this.pos.x) { // left
             return 3;
         }
-        if (this.pos.x + fWidth <= playerPos.x) { // right
+        if (this.pos.x + this.fWidth <= playerPos.x) { // right
             return 4;
         }
         if (this.pos.y > playerPos.y) {
             return 2;
         }
-        if (this.pos.y + fHeight <= playerPos.y) {
+        if (this.pos.y + this.fHeight <= playerPos.y) {
             return 1;
         }
         return 0;

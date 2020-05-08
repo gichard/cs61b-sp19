@@ -97,6 +97,13 @@ public class TERenderer {
         StdDraw.show();
     }
 
+    public void renderFrame(TETile[][] world, int hp) {
+        TETile hT = hoverTile(StdDraw.mouseX(), StdDraw.mouseY(), world);
+        prepareFrame(world, hp, hT);
+
+        StdDraw.show();
+    }
+
     public void prepareFrame(TETile[][] world) {
         prepareFrame(world, -1, null);
     }
@@ -105,6 +112,10 @@ public class TERenderer {
         int numXTiles = world.length;
         int numYTiles = world[0].length;
         StdDraw.clear(new Color(0, 0, 0));
+        if (hT != null && hp >= 0) {
+            UI.drawStatus(hp, hT, world.length, world[0].length + UI.HEADER);
+        }
+
         for (int x = 0; x < numXTiles; x += 1) {
             for (int y = 0; y < numYTiles; y += 1) {
                 if (world[x][y] == null) {
@@ -114,9 +125,14 @@ public class TERenderer {
                 world[x][y].draw(x + xOffset, y + yOffset);
             }
         }
+    }
 
-        if (hT != null && hp >= 0) {
-            UI.drawStatus(hp, hT, world.length, world[0].length + UI.HEADER);
+    public TETile hoverTile(double x, double y, TETile[][] world) {
+        int tX = (int) Math.floor(x - xOffset);
+        int tY = (int) Math.floor(y - yOffset);
+        if (tX >= world.length || tY >= world[0].length || tX < 0 || tY < 0) {
+            return null;
         }
+        return world[tX][tY];
     }
 }

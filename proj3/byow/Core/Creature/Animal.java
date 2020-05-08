@@ -33,6 +33,7 @@ public class Animal {
     public void move(Point dir) {
         pos.x += dir.x;
         pos.y += dir.y;
+        System.out.println(this.avatar.description() + " moved in direction " + dir.x + " ," + dir.y);
     }
 
     // set the animal's position. also refresh its health if dead

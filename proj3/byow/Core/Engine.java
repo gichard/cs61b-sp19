@@ -11,6 +11,8 @@ import byow.TileEngine.Tileset;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -19,13 +21,14 @@ public class Engine {
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
-    public static final int REAL_WIDTH =  500;
-    public static final int REAL_HEIGHT = 500;
+    public static final int REAL_WIDTH =  100;
+    public static final int REAL_HEIGHT = 100;
     public String SAVE_PATH = "./save_data.txt";
     private Map<String, Object> params = new HashMap<>();
     private boolean start = false;
     public RandomWorld rw;
     public SlidingFrame sf;
+    private StringBuilder userInput = new StringBuilder();
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
@@ -35,25 +38,32 @@ public class Engine {
         InputSource si = new KeyboardInputSource();
 
         while (si.possibleNextInput()) {
-            char instruction = si.getNextKey();
-            switch (instruction) {
-                case 'N':
-                    if (!start) {
-                        getSeed(si);
-                        startGame();
-                        start = true;
-                    }
-                    break;
-                case 'L':
-                    loadGame(SAVE_PATH);
-                    break;
-                case ':':
-                    escape(si);
-                    break;
-                default:
-                    performAction(instruction);
+            if (StdDraw.hasNextKeyTyped()) {
+                char instruction = si.getNextKey();
+                if (instruction != 'L') { //
+                    userInput.append(instruction);
+                }
+                switch (instruction) {
+                    case 'N':
+                        if (!start) {
+                            getSeed(si);
+                            startGame();
+                            start = true;
+                        }
+                        break;
+                    case 'L':
+                        loadGame(SAVE_PATH);
+                        break;
+                    case ':':
+                        escape(si);
+                        break;
+                    default:
+                        performAction(instruction);
+                }
             }
-            refresh();
+            if (start) {
+                refresh(true);
+            }
         }
     }
 
@@ -88,12 +98,9 @@ public class Engine {
 
         InputSource si = new StringInputDevice(input);
         parseString(si);
-        long seed = (long) params.get("seed");
-        rw = new RandomWorld(seed, WIDTH, HEIGHT);
 
         TETile[][] finalWorldFrame = rw.world;
-        ter.initialize(WIDTH, HEIGHT);
-        ter.renderFrame(finalWorldFrame);
+
         return finalWorldFrame;
     }
 
@@ -102,20 +109,39 @@ public class Engine {
             throw new IllegalArgumentException();
         }
 
-        getSeed(input);
-        if (input.possibleNextInput()) {
-            List<Character> actions = new LinkedList<>();
-            while (input.possibleNextInput()) {
-                actions.add(input.getNextKey());
+        while (input.possibleNextInput()) {
+            char instruction = input.getNextKey();
+            userInput.append(instruction);
+            switch (instruction) {
+                case 'N':
+                    if (!start) {
+                        getSeed(input);
+                        startGame();
+                        start = true;
+                    }
+                    break;
+                case 'L':
+                    if (!start) {
+                        loadGame(SAVE_PATH);
+                    }
+                    break;
+                case ':':
+                    escape(input);
+                    break;
+                default:
+                    performAction(instruction);
+                    refresh(false);
             }
-            this.params.put("actions", actions);
         }
+
+
     }
 
     private void getSeed(InputSource input) {
         long seed = 0L;
         while (input.possibleNextInput()){
             char k = input.getNextKey();
+            userInput.append(k);
             if ("N".equals(String.valueOf(k))) {
                 continue;
             } else if ("S".equals(String.valueOf(k))) {
@@ -128,6 +154,21 @@ public class Engine {
     }
 
     private void saveExit() {
+
+        String s = userInput.substring(0, userInput.length() - 2); // ignore the ":Q"
+        try {
+            File sf = new File(SAVE_PATH);
+            if (!sf.exists()) {
+                sf.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(sf);
+            fw.write(s);
+            fw.flush();
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.exit(0);
     }
 
@@ -164,18 +205,19 @@ public class Engine {
     }
 
     private void startGame() {
-        rw = new RandomWorld((long) params.get("seed"), REAL_HEIGHT, REAL_HEIGHT);
+        rw = new RandomWorld((long) params.get("seed"), REAL_WIDTH, REAL_HEIGHT);
 
         sf = new SlidingFrame(rw.world, WIDTH, HEIGHT, rw.getPlayer());
 
-        TETile[][] finalWorldFrame = sf.getRenderTiles();
+//        TETile[][] finalWorldFrame = sf.getRenderTiles();
         ter.initialize(WIDTH, HEIGHT + UI.HEADER, 0, UI.FOOT);
-        ter.renderFrame(finalWorldFrame, 5, Tileset.FLOOR);
+//        ter.renderFrame(finalWorldFrame, 5, Tileset.FLOOR);
     }
 
     private void escape(InputSource input) {
         if (input.possibleNextInput()) {
             char op = input.getNextKey();
+            userInput.append(op);
             switch (op) {
                 case 'Q':
                     saveExit();
@@ -184,10 +226,33 @@ public class Engine {
     }
 
     private void loadGame(String path) {
+        File sf = new File(path);
+        if (sf.isFile() && sf.exists()) {
+            try {
+                FileInputStream fis = new FileInputStream(sf);
+                InputStreamReader isr = new InputStreamReader(fis);
+                BufferedReader br = new BufferedReader(isr);
 
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                interactWithInputString(sb.toString());
+                refresh(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.exit(-1);
+        }
     }
 
-    private void refresh() {
-        ter.renderFrame(sf.getRenderTiles(), rw.getPlayer().getHP(), Tileset.FLOOR);
+    private void refresh(boolean doRender) {
+        if (doRender) {
+            ter.renderFrame(sf.getRenderTiles(), rw.getPlayer().getHP());
+        } else {
+            sf.slideFrame();
+        }
     }
 }
