@@ -5,6 +5,8 @@ import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SlidingFrame {
     private TETile[][] world;
@@ -15,6 +17,9 @@ public class SlidingFrame {
     private Animal player;
     private Point pos;
 
+    // record animals' Pos, used to recover tile after animal moves to another tile
+    private Set<Point> animalPos;
+
     public SlidingFrame(TETile[][] world, int fWidth, int fHeight, Animal player) {
         this.player = player;
         this.playerPos = player.getPos();
@@ -23,20 +28,24 @@ public class SlidingFrame {
         this.fWidth = fWidth;
         this.fHeight = fHeight;
         this.pos = new Point();
+        animalPos = new HashSet<>();
         centerPlayer();
 
         prepRenderTiles();
     }
 
     public TETile[][] getRenderTiles() {
+        prepRenderTiles();
         return renderTiles;
     }
 
     // update render frame if player is not in current render frame
     public boolean slideFrame() {
         this.playerPos = this.player.getPos();
-        if (!playerInFrame()) {
-            centerPlayer();
+        int inf = playerInFrame();
+        if (inf != 0) {
+//            centerPlayer();
+            slideFrame(inf);
             return true;
         }
         return false;
@@ -58,15 +67,24 @@ public class SlidingFrame {
         }
 
         // prepare new world frame
-        renderTiles = new TETile[fWidth][fHeight];
-        for (int x = 0; x < fWidth; x++) {
-            for (int y = 0; y < fHeight; y++) {
-                if (validTile(x, y)) {
-                    renderTiles[x][y] = world[x + this.pos.x][y + this.pos.y];
-                } else {
-                    renderTiles[x][y] = Tileset.NOTHING;
-                }
-            }
+        resetFrame();
+    }
+
+    // slide the frame according to dir, 0, 1, 2, 3 for up, down, left, right
+    private void slideFrame(int dir) {
+        switch (dir) {
+            case 1:
+                this.pos.y += this.fHeight;
+                break;
+            case 2:
+                this.pos.y -= this.fHeight;
+                break;
+            case 3:
+                this.pos.x -= this.fWidth;
+                break;
+            case 4:
+                this.pos.x += this.fWidth;
+                break;
         }
     }
 
@@ -79,7 +97,9 @@ public class SlidingFrame {
 
     // add an animal's avatar to render frame
     private void prepAnimal(Animal a) {
+        resetFrame();
         Point aP = a.getPos();
+        animalPos.add(aP);
         renderTiles[aP.x - this.pos.x][aP.y - this.pos.y] = a.getAvatar();
     }
 
@@ -90,8 +110,39 @@ public class SlidingFrame {
     }
 
     // check if the player has moved outside of the frame
-    private boolean playerInFrame() {
-        return this.pos.x <= playerPos.x && this.pos.x + fWidth > playerPos.x
-                && this.pos.y <= playerPos.y && this.pos.y + fHeight > playerPos.y;
+    // return 0 if it's true, otherwise 1, 2, 3, 4 for up, down, left, right
+    private int playerInFrame() {
+        if (playerPos.x < this.pos.x) { // left
+            return 3;
+        }
+        if (this.pos.x + fWidth <= playerPos.x) { // right
+            return 4;
+        }
+        if (this.pos.y > playerPos.y) {
+            return 2;
+        }
+        if (this.pos.y + fHeight <= playerPos.y) {
+            return 1;
+        }
+        return 0;
+    }
+
+    private void resetFrame() {
+//        for (Point p: animalPos
+//             ) {
+//            animalPos.remove(p);
+////            renderTiles[p.x - this.pos.x][p.y - this.pos.y] = world[p.x][p.y];
+//            renderTiles[p.x - this.pos.x][p.y - this.pos.y] = Tileset.FLOOR;
+//        }
+        renderTiles = new TETile[fWidth][fHeight];
+        for (int x = 0; x < fWidth; x++) {
+            for (int y = 0; y < fHeight; y++) {
+                if (validTile(x, y)) {
+                    renderTiles[x][y] = world[x + this.pos.x][y + this.pos.y];
+                } else {
+                    renderTiles[x][y] = Tileset.NOTHING;
+                }
+            }
+        }
     }
 }

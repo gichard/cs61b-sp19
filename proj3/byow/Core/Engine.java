@@ -8,6 +8,7 @@ import byow.Core.Input.StringInputDevice;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
+import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
 import java.util.*;
@@ -20,8 +21,11 @@ public class Engine {
     public static final int HEIGHT = 30;
     public static final int REAL_WIDTH =  500;
     public static final int REAL_HEIGHT = 500;
+    public String SAVE_PATH = "./save_data.txt";
     private Map<String, Object> params = new HashMap<>();
+    private boolean start = false;
     public RandomWorld rw;
+    public SlidingFrame sf;
 
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
@@ -29,14 +33,28 @@ public class Engine {
      */
     public void interactWithKeyboard() {
         InputSource si = new KeyboardInputSource();
-        getSeed(si);
-        RandomWorld rw = new RandomWorld((long) params.get("seed"), REAL_HEIGHT, REAL_HEIGHT);
 
-        SlidingFrame sf = new SlidingFrame(rw.world, WIDTH, HEIGHT, rw.getPlayer());
-
-        TETile[][] finalWorldFrame = sf.getRenderTiles();
-        ter.initialize(WIDTH, HEIGHT + UI.HEADER, 0, UI.FOOT);
-        ter.renderFrame(finalWorldFrame, 5, Tileset.FLOOR);
+        while (si.possibleNextInput()) {
+            char instruction = si.getNextKey();
+            switch (instruction) {
+                case 'N':
+                    if (!start) {
+                        getSeed(si);
+                        startGame();
+                        start = true;
+                    }
+                    break;
+                case 'L':
+                    loadGame(SAVE_PATH);
+                    break;
+                case ':':
+                    escape(si);
+                    break;
+                default:
+                    performAction(instruction);
+            }
+            refresh();
+        }
     }
 
     /**
@@ -109,15 +127,12 @@ public class Engine {
         }
     }
 
-    private void saveExit(InputSource input) {
-        char q = input.getNextKey();
-        if (q == 'Q') {
-            // save game state
-        }
+    private void saveExit() {
+        System.exit(0);
     }
 
     private void performAction(char action) {
-        ((LinkedList<Character>) params.get("actions")).add(action);
+//        ((LinkedList<Character>) params.get("actions")).add(action);
         Point dir = new Point(0, 0);
         switch (action) {
             case 'W':
@@ -148,4 +163,31 @@ public class Engine {
         return !rw.world[target.x][target.y].equals(Tileset.WALL);
     }
 
+    private void startGame() {
+        rw = new RandomWorld((long) params.get("seed"), REAL_HEIGHT, REAL_HEIGHT);
+
+        sf = new SlidingFrame(rw.world, WIDTH, HEIGHT, rw.getPlayer());
+
+        TETile[][] finalWorldFrame = sf.getRenderTiles();
+        ter.initialize(WIDTH, HEIGHT + UI.HEADER, 0, UI.FOOT);
+        ter.renderFrame(finalWorldFrame, 5, Tileset.FLOOR);
+    }
+
+    private void escape(InputSource input) {
+        if (input.possibleNextInput()) {
+            char op = input.getNextKey();
+            switch (op) {
+                case 'Q':
+                    saveExit();
+            }
+        }
+    }
+
+    private void loadGame(String path) {
+
+    }
+
+    private void refresh() {
+        ter.renderFrame(sf.getRenderTiles(), rw.getPlayer().getHP(), Tileset.FLOOR);
+    }
 }
