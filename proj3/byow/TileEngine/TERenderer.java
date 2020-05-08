@@ -36,7 +36,7 @@ public class TERenderer {
         this.yOffset = yOff;
         StdDraw.setCanvasSize(width * TILE_SIZE, height * TILE_SIZE);
         Font font = new Font("Monaco", Font.BOLD, TILE_SIZE - 2);
-        StdDraw.setFont(font);      
+        StdDraw.setFont(font);
         StdDraw.setXscale(0, width);
         StdDraw.setYscale(0, height);
 
@@ -112,10 +112,12 @@ public class TERenderer {
         int numXTiles = world.length;
         int numYTiles = world[0].length;
         StdDraw.clear(new Color(0, 0, 0));
-        if (hT != null && hp >= 0) {
+        if (hp >= 0) {
             UI.drawStatus(hp, hT, world.length, world[0].length + UI.HEADER);
         }
 
+        Font font = new Font("Monaco", Font.BOLD, TILE_SIZE - 2);
+        StdDraw.setFont(font);
         for (int x = 0; x < numXTiles; x += 1) {
             for (int y = 0; y < numYTiles; y += 1) {
                 if (world[x][y] == null) {

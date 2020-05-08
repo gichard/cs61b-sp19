@@ -51,7 +51,9 @@ public class UI {
         StdDraw.setPenColor(Color.WHITE);
         String hpS = String.join("", Collections.nCopies(hp, "♡"));
         StdDraw.textLeft(1.0, h - 1, hpS);
-        StdDraw.textRight(w - 1, h - 1, t.description());
+        if (t != null) {
+            StdDraw.textRight(w - 1, h - 1, t.description());
+        }
     }
 
     public static void main(String[] args) {
