@@ -15,39 +15,26 @@ public class FlightSolver {
     public FlightSolver(ArrayList<Flight> flights) {
         /* FIX ME */
         max = 0;
-        PriorityQueue<Flight> fQ = new PriorityQueue<>();
-        Comparator<Flight> flightComparator = (f1, f2) -> {
-            int startC = f1.startTime - f2.startTime;
-            int endC =  f1.endTime - f2.endTime;
-            if (startC < 0 && endC < 0) {
-                return -1;
-            } else if (startC > 0 & endC > 0) {
-                return 1;
-            }
-            int st1 = Math.min(f1.startTime, f2.startTime);
-            int st2 = Math.max(f1.startTime, f2.startTime);
-            int et1 = Math.min(f1.endTime, f2.endTime);
-            int et2 = Math.max(f1.endTime, f2.endTime);
-            f2.startTime = st2;
-            f2.endTime = et1;
-            f2.passengers = f1.passengers + f2.passengers;
-            max = Math.max(max, f2.passengers);
-            if (st2 - st1 > 1) {
-                fQ.add(new Flight(st1, st2, f1.startTime == st1 ? f1.passengers : f2.passengers));
-            }
-            if (et2 - et1 > 1) {
-                fQ.add(new Flight(et1, et2, f1.endTime == et2 ? f1.passengers : f2.passengers));
-            }
-            return 0;
-        };
+        Comparator<Flight> startTimeCmp = (Flight f1, Flight f2) -> Integer.compare(f1.startTime, f2.startTime);
+        PriorityQueue<Flight> sfQ = new PriorityQueue<>(startTimeCmp);
+        sfQ.addAll(flights);
 
-        fQ = new PriorityQueue<>(flightComparator);
+        Comparator<Flight> endTimeCmp = (Flight f1, Flight f2) -> Integer.compare(f1.endTime, f2.endTime);
+        PriorityQueue<Flight> efQ = new PriorityQueue<>(endTimeCmp);
+        efQ.addAll(flights);
 
-        for (Flight f: flights
-             ) {
-            max = Math.max(max, f.passengers);
-            fQ.add(f);
+        int pCount = 0;
+        while (sfQ.size() > 0) {
+            if (sfQ.peek().startTime <= efQ.peek().endTime) {
+                pCount += sfQ.poll().passengers;
+                if (pCount > max) {
+                    max = pCount;
+                }
+            } else {
+                pCount -= efQ.poll().passengers;
+            }
         }
+
     }
 
     public int solve() {
