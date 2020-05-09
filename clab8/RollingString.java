@@ -17,6 +17,13 @@ class RollingString{
      */
     static final int PRIMEBASE = 6113;
 
+    private char[] content;
+    private int start;
+    private int next;
+    private int size;
+    private int hash;
+    private int MSH; // hash of the most significant 'digit' c is c * MSH % PRIMEBASE
+
     /**
      * Initializes a RollingString with a current value of String s.
      * s must be the same length as the maximum length.
@@ -24,6 +31,20 @@ class RollingString{
     public RollingString(String s, int length) {
         assert(s.length() == length);
         /* FIX ME */
+        content = new char[length];
+        size = 0;
+        start = 0;
+        next = 0;
+        hash = 0;
+        MSH = 1;
+        while (size < length) {
+            content[next] = s.charAt(size);
+            size += 1;
+            // update hashcode in constant time
+            hash = (hash * UNIQUECHARS % PRIMEBASE + (int) content[next]) % PRIMEBASE;
+            next = (next + 1) % length;
+            MSH = (MSH * UNIQUECHARS) % PRIMEBASE;
+        }
     }
 
     /**
@@ -33,8 +54,13 @@ class RollingString{
      */
     public void addChar(char c) {
         /* FIX ME */
+        char oldFirst = content[start];
+        start = (start + 1) % size;
+        content[next] = c;
+        hash = Math.floorMod(Math.floorMod(hash * UNIQUECHARS, PRIMEBASE)
+                - Math.floorMod((int) oldFirst * MSH, PRIMEBASE) + (int) c, PRIMEBASE);
+        next = start;
     }
-
 
     /**
      * Returns the "string" stored in this RollingString, i.e. materializes
@@ -44,7 +70,10 @@ class RollingString{
     public String toString() {
         StringBuilder strb = new StringBuilder();
         /* FIX ME */
-        return "";
+        for (int i = 0; i < size; i++) {
+            strb.append(content[(start + i) % size]);
+        }
+        return strb.toString();
     }
 
     /**
@@ -53,7 +82,7 @@ class RollingString{
      */
     public int length() {
         /* FIX ME */
-        return -1;
+        return size;
     }
 
 
@@ -65,7 +94,7 @@ class RollingString{
     @Override
     public boolean equals(Object o) {
         /* FIX ME */
-        return false;
+        return this.toString().equals(o.toString());
     }
 
     /**
@@ -75,6 +104,6 @@ class RollingString{
     @Override
     public int hashCode() {
         /* FIX ME */
-        return -1;
+        return hash;
     }
 }
