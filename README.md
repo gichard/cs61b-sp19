@@ -11,3 +11,6 @@ Rest homeworks, labs and projects are tested locally, should contain a bunch of 
 - Fix a bug in proj2 - route doesn't appear once direction is enabled;
 - Add extra features(better UI, monsters, victory, vision system, teleport tiles, etc.) in proj3-BYOW;
 - improve coding style, reduce tactical programming in project code.
+
+## Acknowledgement
+Thanks to Prof. Josh Hug for bringing such an interesting course, and making it available to vast majorities.
