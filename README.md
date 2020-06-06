@@ -1,5 +1,5 @@
 # cs61b-sp19
-Solutions to HWs, Labs and Projects of [CS61b-19s](https://sp19.datastructur.es). 
+Solutions to HWs, Labs and Projects of [CS61b-19sp](https://sp19.datastructur.es). 
 
 ## Note
 HW1-3, Lab1-5, proj0 and proj1 have passed 18summer autograder on Gradescope, some APIs were modified to pass the old tests. 
